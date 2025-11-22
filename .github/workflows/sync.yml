@@ -38,3 +38,6 @@ jobs:
 
       - name: Generate checksums
         run: bash ./script/generate_checksums.sh
+
+      - name: Echo checksums
+        run: cat checksums.json
