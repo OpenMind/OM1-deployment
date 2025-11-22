@@ -1,0 +1,32 @@
+name: 'Sync Workflow'
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Clean s3 bucket
+        run: aws s3 rm s3://$BUCKET/ota --recursive
+
+      - name: Sync files to s3
+        run: aws s3 cp --recursive . s3://$BUCKET/ota --exclude ".github/*" --exclude ".git/*" --exclude "README.md" --exclude ".gitignore" --exclude "script/*"
+
+      - name: Invalidate CloudFront cache
+        run: aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/ota/*"
+
+      - name: Generate checksums
+        run: bash ./script/generate_checksums.sh
