@@ -27,6 +27,9 @@ jobs:
             echo "BUCKET=${{ secrets.BUCKET }}" >> $GITHUB_ENV
             echo "CLOUDFRONT_DISTRIBUTION_ID=${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" >> $GITHUB_ENV
 
+      - name: Generate checksums
+        run: bash ./script/generate_checksums.sh
+
       - name: Clean s3 bucket
         run: aws s3 rm s3://$BUCKET/ota --recursive
 
@@ -35,9 +38,6 @@ jobs:
 
       - name: Invalidate CloudFront cache
         run: aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/ota/*"
-
-      - name: Generate checksums
-        run: bash ./script/generate_checksums.sh
 
       - name: Echo checksums
         run: cat checksums.json
