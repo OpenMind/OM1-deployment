@@ -19,6 +19,11 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Set environment variables
+        run: |
+            echo "BUCKET=${{ secrets.BUCKET }}" >> $GITHUB_ENV
+            echo "CLOUDFRONT_DISTRIBUTION_ID=${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" >> $GITHUB_ENV
+
       - name: Clean s3 bucket
         run: aws s3 rm s3://$BUCKET/ota --recursive
 
