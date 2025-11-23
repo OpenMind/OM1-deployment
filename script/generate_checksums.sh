@@ -1,47 +1,157 @@
 #!/bin/bash
 
 # Script to generate checksums for OTA deployment files
-# Output format: JSON with service name, tag, S3 URL, and checksum
+# Output format: JSON with service name, tag, S3 URL, file checksum, and Docker image SHA256
 
-LATEST_DIR="latest"
-BASE_S3_URL="https://assets.openmind.org/ota/latest"
+BASE_S3_URL="https://assets.openmind.org/ota"
 OUTPUT_FILE="checksums.json"
 
-if [ ! -d "$LATEST_DIR" ]; then
-    echo "Error: $LATEST_DIR directory not found"
+get_deployment_dirs() {
+    find . -maxdepth 1 -type d ! -name "." ! -name "script" ! -name ".git" ! -name ".github" | sed 's|^\./||' | sort
+}
+
+extract_image_name() {
+    local yaml_file="$1"
+
+    local image_line=$(grep -E "^\s*image:" "$yaml_file" | head -1)
+    if [ -z "$image_line" ]; then
+        echo "Warning: No image found in $yaml_file" >&2
+        return 1
+    fi
+
+    local full_image=$(echo "$image_line" | sed 's/^[[:space:]]*image:[[:space:]]*//' | tr -d '"'"'"'')
+
+    echo "$full_image"
+}
+
+get_docker_sha256() {
+    local full_image="$1"
+
+    local image_repo=$(echo "$full_image" | cut -d':' -f1)
+    local tag=$(echo "$full_image" | cut -d':' -f2)
+
+    if [ "$image_repo" = "$tag" ]; then
+        tag="latest"
+    fi
+
+    local token=$(curl -s "https://auth.docker.io/token?service=registry.docker.io&scope=repository:${image_repo}:pull" \
+        | sed -n 's/.*"token":"\([^"]*\)".*/\1/p')
+
+    if [ -z "$token" ]; then
+        echo "Error: Failed to get Docker registry token for ${image_repo}" >&2
+        return 1
+    fi
+
+    local sha256=$(curl -s -I \
+        -H "Authorization: Bearer $token" \
+        -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
+        "https://registry.hub.docker.com/v2/${image_repo}/manifests/${tag}" \
+        | grep -i "docker-content-digest" \
+        | sed 's/.*sha256:\([a-f0-9]*\).*/\1/' \
+        | tr -d '\r')
+
+    if [ -z "$sha256" ]; then
+        echo "Error: Failed to get SHA256 for ${image_repo}:${tag}" >&2
+        return 1
+    fi
+
+    echo "$sha256"
+}
+
+deployment_dirs=$(get_deployment_dirs)
+
+if [ -z "$deployment_dirs" ]; then
+    echo "Error: No deployment directories found"
     exit 1
 fi
 
+echo "Found deployment directories: $deployment_dirs" >&2
+
+temp_data="/tmp/services_data.txt"
+> "$temp_data"
+
+for dir in $deployment_dirs; do
+    if [ -d "$dir" ]; then
+        echo "Processing directory: $dir" >&2
+
+        for file in "$dir"/*.yml; do
+            if [ -f "$file" ]; then
+                filename=$(basename "$file")
+                service_name="${filename%.yml}"
+
+                checksum=$(shasum -a 256 "$file" | cut -d' ' -f1)
+
+                docker_image=$(extract_image_name "$file")
+
+                if [ $? -eq 0 ] && [ -n "$docker_image" ]; then
+                    echo "Found Docker image in ${dir}/${filename}: ${docker_image}" >&2
+
+                    echo "Getting Docker SHA256 for ${docker_image}..." >&2
+                    docker_sha256=$(get_docker_sha256 "$docker_image")
+
+                    if [ $? -eq 0 ] && [ -n "$docker_sha256" ]; then
+                        echo "Successfully got SHA256 for ${docker_image}: ${docker_sha256}" >&2
+                    else
+                        echo "Error: Failed to get Docker SHA256 for ${docker_image}" >&2
+                        echo "Exiting script due to missing Docker SHA256" >&2
+                        exit 1
+                    fi
+                else
+                    echo "Error: Could not extract Docker image from ${dir}/${filename}" >&2
+                    echo "Exiting script due to missing Docker image" >&2
+                    exit 1
+                fi
+
+                echo "${service_name}|${dir}|${checksum}|${docker_image}|${docker_sha256}|${filename}" >> "$temp_data"
+            fi
+        done
+    fi
+done
+
 echo "{" > "$OUTPUT_FILE"
 
-file_count=0
-total_files=$(find "$LATEST_DIR" -name "*.yml" | wc -l | tr -d ' ')
+unique_services=$(cut -d'|' -f1 "$temp_data" | sort -u)
+service_count=0
+total_unique_services=$(echo "$unique_services" | wc -l | tr -d ' ')
 
-for file in "$LATEST_DIR"/*.yml; do
-    if [ -f "$file" ]; then
-        filename=$(basename "$file")
-        service_name="${filename%.yml}"
+for service_name in $unique_services; do
+    ((service_count++))
 
-        checksum=$(shasum -a 256 "$file" | cut -d' ' -f1)
+    echo "    \"$service_name\": {" >> "$OUTPUT_FILE"
 
-        ((file_count++))
+    service_entries=$(grep "^${service_name}|" "$temp_data")
+    entry_count=0
+    total_entries=$(echo "$service_entries" | wc -l | tr -d ' ')
 
-        echo "    \"$service_name\": {" >> "$OUTPUT_FILE"
-        echo "        \"latest\": {" >> "$OUTPUT_FILE"
-        echo "            \"tag\": \"latest\"," >> "$OUTPUT_FILE"
-        echo "            \"s3_url\": \"$BASE_S3_URL/$filename\"," >> "$OUTPUT_FILE"
-        echo "            \"checksum\": \"$checksum\"" >> "$OUTPUT_FILE"
-        echo "        }" >> "$OUTPUT_FILE"
+    while IFS='|' read -r sname dir checksum docker_image docker_sha256 filename; do
+        ((entry_count++))
 
-        if [ "$file_count" -lt "$total_files" ]; then
-            echo "    }," >> "$OUTPUT_FILE"
+        echo "        \"$dir\": {" >> "$OUTPUT_FILE"
+        echo "            \"tag\": \"$dir\"," >> "$OUTPUT_FILE"
+        echo "            \"s3_url\": \"$BASE_S3_URL/$dir/$filename\"," >> "$OUTPUT_FILE"
+        echo "            \"checksum\": \"$checksum\"," >> "$OUTPUT_FILE"
+        echo "            \"image\": \"$docker_image\"," >> "$OUTPUT_FILE"
+        echo "            \"image_sha256\": \"$docker_sha256\"" >> "$OUTPUT_FILE"
+
+        if [ "$entry_count" -lt "$total_entries" ]; then
+            echo "        }," >> "$OUTPUT_FILE"
         else
-            echo "    }" >> "$OUTPUT_FILE"
+            echo "        }" >> "$OUTPUT_FILE"
         fi
+    done <<< "$service_entries"
+
+    if [ "$service_count" -lt "$total_unique_services" ]; then
+        echo "    }," >> "$OUTPUT_FILE"
+    else
+        echo "    }" >> "$OUTPUT_FILE"
     fi
 done
 
 echo "}" >> "$OUTPUT_FILE"
 
-echo "Checksums generated successfully in $OUTPUT_FILE"
-echo "Total files processed: $file_count"
+# Clean up temp file
+rm -f "$temp_data"
+
+echo "Checksums generated successfully in $OUTPUT_FILE" >&2
+echo "Total unique services processed: $total_unique_services" >&2
+echo "Deployment directories processed: $(echo $deployment_dirs | wc -w | tr -d ' ')" >&2
