@@ -9,10 +9,10 @@ services:
     container_name: ota_agent
     restart: unless-stopped
     environment:
-      - OM_API_KEY=om1_test_7137645faeeb0a4da3e41de13bcd0219f11b49b5216767503827dcf90a688540ffedb24edf7864c3
-      - OM_API_KEY_ID=7137645faeeb0a4d
-      - OTA_AGENT_SERVER_URL=wss://api-dev.openmind.org/api/core/ota/agent
-      - DOCKER_STATUS_URL=https://api-dev.openmind.org/api/core/ota/agent/docker
+      - OM_API_KEY=${OM_API_KEY}
+      - OM_API_KEY_ID=${OM_API_KEY_ID}
+      - OTA_AGENT_SERVER_URL=${OTA_AGENT_SERVER_URL:-wss://api.openmind.org/api/core/ota/agent}
+      - DOCKER_STATUS_URL=${DOCKER_STATUS_URL:-https://api.openmind.org/api/core/ota/agent/docker}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/local/bin/docker:ro

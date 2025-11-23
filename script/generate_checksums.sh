@@ -22,11 +22,6 @@ for file in "$LATEST_DIR"/*.yml; do
         filename=$(basename "$file")
         service_name="${filename%.yml}"
 
-        if [[ "$service_name" == "ota_updater.yml" ]]; then
-            service_name="ota_updater"
-            filename="ota_updater.yml"
-        fi
-
         checksum=$(shasum -a 256 "$file" | cut -d' ' -f1)
 
         ((file_count++))
