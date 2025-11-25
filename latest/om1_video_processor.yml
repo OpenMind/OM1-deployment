@@ -27,8 +27,8 @@ services:
       - /run/user/2002/pulse:/run/user/2002/pulse:rw
       - /home/openmind/.config/pulse/cookie:/root/.config/pulse/cookie:ro
       - /home/openmind/om1/om1_video_processor/.venv:/app/om1_video_processor/.venv
-      - /home/openmind/om1/gallery:/data/gallery:rw
-      - /home/openmind/om1/embeds:/data/embeds:rw
+      - /home/openmind/om1/om1_video_processor/gallery:/data/gallery:rw
+      - /home/openmind/om1/om1_video_processor/embeds:/data/embeds:rw
     devices:
       - /dev/snd:/dev/snd
       - /dev/video0:/dev/video0
