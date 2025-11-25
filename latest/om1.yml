@@ -22,7 +22,7 @@ services:
       - PULSE_COOKIE=/root/.config/pulse/cookie
       - ALSA_CARD=0
     volumes:
-      - /home/openmind/om1/config:/app/OM1/config
+      - /home/openmind/om1/om1/config:/app/OM1/config
       - /dev/snd:/dev/snd:rw
       - /run/user/2002/pulse:/run/user/2002/pulse:rw
       - /home/openmind/.config/pulse/cookie:/root/.config/pulse/cookie:ro

@@ -21,8 +21,8 @@ services:
       - /dev:/dev
       - /run/udev:/run/udev:ro
       - /sys:/sys:ro
-      - /home/openmind/om1/maps:/app/unitree_sdk/maps:rw
-      - /home/openmind/om1/locations:/app/unitree_sdk/locations:rw
+      - /home/openmind/om1/orchestrator/maps:/app/unitree_sdk/maps:rw
+      - /home/openmind/om1/orchestrator/locations:/app/unitree_sdk/locations:rw
     logging:
       driver: "json-file"
       options:
