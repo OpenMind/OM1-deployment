@@ -27,6 +27,14 @@ extract_image_name() {
 get_docker_sha256() {
     local full_image="$1"
 
+    # Hardcoded SHA256 for nvidia vllm image
+    case "$full_image" in
+        "nvcr.io/nvidia/vllm:25.09-py3")
+            echo "15f380ad9c32f0ac57ac16e4b778c6f733c88b9ffe3a936035d0a59ad17b1aab"
+            return 0
+            ;;
+    esac
+
     local image_repo=$(echo "$full_image" | cut -d':' -f1)
     local tag=$(echo "$full_image" | cut -d':' -f2)
 
