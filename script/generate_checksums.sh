@@ -117,7 +117,6 @@ for dir in $deployment_dirs; do
 done
 
 echo "{" > "$OUTPUT_FILE"
-echo "    \"om1\": {" >> "$OUTPUT_FILE"
 
 unique_dirs=$(cut -d'|' -f2 "$temp_data" | sort -u)
 dir_count=0
@@ -126,7 +125,7 @@ total_unique_dirs=$(echo "$unique_dirs" | wc -l | tr -d ' ')
 for dir in $unique_dirs; do
     ((dir_count++))
 
-    echo "        \"$dir\": {" >> "$OUTPUT_FILE"
+    echo "    \"$dir\": {" >> "$OUTPUT_FILE"
 
     dir_entries=$(grep "|${dir}|" "$temp_data")
     entry_count=0
@@ -135,28 +134,27 @@ for dir in $unique_dirs; do
     while IFS='|' read -r sname sdir checksum docker_image docker_sha256 filename; do
         ((entry_count++))
 
-        echo "            \"$sname\": {" >> "$OUTPUT_FILE"
-        echo "                \"tag\": \"$sdir\"," >> "$OUTPUT_FILE"
-        echo "                \"s3_url\": \"$BASE_S3_URL/$sdir/$filename\"," >> "$OUTPUT_FILE"
-        echo "                \"checksum\": \"$checksum\"," >> "$OUTPUT_FILE"
-        echo "                \"image\": \"$docker_image\"," >> "$OUTPUT_FILE"
-        echo "                \"image_sha256\": \"$docker_sha256\"" >> "$OUTPUT_FILE"
+        echo "        \"$sname\": {" >> "$OUTPUT_FILE"
+        echo "            \"tag\": \"$sdir\"," >> "$OUTPUT_FILE"
+        echo "            \"s3_url\": \"$BASE_S3_URL/$sdir/$filename\"," >> "$OUTPUT_FILE"
+        echo "            \"checksum\": \"$checksum\"," >> "$OUTPUT_FILE"
+        echo "            \"image\": \"$docker_image\"," >> "$OUTPUT_FILE"
+        echo "            \"image_sha256\": \"$docker_sha256\"" >> "$OUTPUT_FILE"
 
         if [ "$entry_count" -lt "$total_entries" ]; then
-            echo "            }," >> "$OUTPUT_FILE"
+            echo "        }," >> "$OUTPUT_FILE"
         else
-            echo "            }" >> "$OUTPUT_FILE"
+            echo "        }" >> "$OUTPUT_FILE"
         fi
     done <<< "$dir_entries"
 
     if [ "$dir_count" -lt "$total_unique_dirs" ]; then
-        echo "        }," >> "$OUTPUT_FILE"
+        echo "    }," >> "$OUTPUT_FILE"
     else
-        echo "        }" >> "$OUTPUT_FILE"
+        echo "    }" >> "$OUTPUT_FILE"
     fi
 done
 
-echo "    }" >> "$OUTPUT_FILE"
 echo "}" >> "$OUTPUT_FILE"
 
 # Clean up temp file
