@@ -1,0 +1,27 @@
+services:
+  om1_monitor:
+    build:
+      context: .
+      network: host
+    image: openmindagi/om1_monitor:v1.0.0
+    container_name: om1_monitor
+    network_mode: host
+    privileged: true
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PORT=80
+      - WIFI_INTERFACE=wlP1p1s0
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/dbus:/var/run/dbus
+      - /etc/NetworkManager:/etc/NetworkManager:ro
+      - /usr/bin/nmcli:/usr/bin/nmcli:ro
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
