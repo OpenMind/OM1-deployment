@@ -8,6 +8,9 @@ services:
     network_mode: host
     runtime: nvidia
 
+    ports:
+      - "8880:8880"
+
     environment:
       - PYTHONPATH=/app:/app/api
       - USE_GPU=true
