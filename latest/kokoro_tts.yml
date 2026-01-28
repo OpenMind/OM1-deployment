@@ -7,7 +7,10 @@ services:
 
     network_mode: "host"
     runtime: nvidia
-    user: "1001:1001"
+    gpus:
+      - driver: nvidia
+        count: 1
+        capabilities: [gpu]
 
     environment:
       - PYTHONPATH=/app:/app/api
