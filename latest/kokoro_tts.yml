@@ -5,12 +5,8 @@ services:
     image: openmindagi/kokoro-fastapi:latest
     container_name: kokoro_tts
 
-    network_mode: "host"
+    network_mode: host
     runtime: nvidia
-    gpus:
-      - driver: nvidia
-        count: 1
-        capabilities: [gpu]
 
     environment:
       - PYTHONPATH=/app:/app/api
@@ -18,7 +14,12 @@ services:
       - PYTHONUNBUFFERED=1
       - API_LOG_LEVEL=DEBUG
 
-    shm_size: "16g"
+    gpus:
+      - driver: nvidia
+        count: 1
+        capabilities: [gpu]
+
+    shm_size: "8g"
     ulimits:
       memlock: -1
       stack: 67108864
