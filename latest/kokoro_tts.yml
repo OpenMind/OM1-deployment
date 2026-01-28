@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  kokoro_tts:
+    image: openmindagi/kokoro-fastapi:latest
+    container_name: kokoro_tts
+
+    network_mode: "host"
+    runtime: nvidia
+    user: "1001:1001"
+
+    environment:
+      - PYTHONPATH=/app:/app/api
+      - USE_GPU=true
+      - PYTHONUNBUFFERED=1
+      - API_LOG_LEVEL=DEBUG
+
+    shm_size: "16g"
+    ulimits:
+      memlock: -1
+      stack: 67108864
+
+    restart: unless-stopped
