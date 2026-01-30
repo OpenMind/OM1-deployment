@@ -67,7 +67,15 @@ poetry self add poetry-plugin-shell
 Install the required packages:
 
 ```bash
-sudo apt-get install portaudio19-dev python3-pyaudio
+sudo apt install portaudio19-dev python3-pyaudio
+```
+
+#### FFmpeg (For audio processing)
+
+Install FFmpeg using the following command:
+
+```bash
+sudo apt install ffmpeg
 ```
 
 #### Chrome (For web interface)
