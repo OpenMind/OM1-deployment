@@ -95,6 +95,10 @@ sudo snap install snapd_24724.snap
 sudo snap refresh --hold snapd
 ```
 
+#### ROS2 (Optional)
+
+Follow the official ROS2 installation guide for Ubuntu: [ROS2 Installation](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html).
+
 ### System Services
 
 We assume you have bought the [brain pack](https://openmind.org/store). If you don't have it, you can skip this section based on your needs.
