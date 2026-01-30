@@ -26,7 +26,7 @@ services:
       - RIVA_EULA=${RIVA_EULA:-accept}
 
     volumes:
-      - ~/riva_quickstart_arm64_v2.24.0/model_repository:/data
+      - /home/openmind/riva_quickstart_arm64_v2.24.0/model_repository:/data
 
     devices:
       - /dev/bus/usb:/dev/bus/usb:rwm
