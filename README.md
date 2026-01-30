@@ -390,7 +390,7 @@ You can now manage and update your Docker containers remotely via the [OpenMind 
 
 Riva models are encrypted and require authentication to download. To download Riva models, you need to set up the NVIDIA NGC CLI tool.
 
-#### Install NGC CLI
+##### Install NGC CLI
 
 > [!WARNING]
 > Please run the following command in your **root** directory. Otherwise, the `docker-compose` file we provide for `Riva` services may not work properly.
@@ -414,6 +414,8 @@ Enter org [no-org]. Choices: ['<YOUR_ORG>']: <YOUR_ORG>
 Enter team [no-team]. Choices: ['<YOUR_TEAM>', 'no-team']: <YOUR_TEAM>
 Enter ace [no-ace]. Choices: ['no-ace']: no-ace
 ```
+
+##### Download Riva Models
 
 Download Riva Embedded version models for `Jetson 7.0`:
 
@@ -448,6 +450,8 @@ export RIVA_EULA=accept
 source ~/.bashrc
 ```
 
+##### OpenMind Riva Docker Image for Jetson
+
 We create a `openmindagi/riva-speech-server:2.24.0-l4t-aarch64` docker image that has Riva ASR and TTS endpoints with the example code to run Riva services on Jetson devices. You can pull the image directly without downloading the models from NGC:
 
 ```bash
@@ -478,7 +482,6 @@ python3 -m om1_speech.main --remote-url=ws://localhost:6790
 # Test TTS
 poetry run om1_tts --tts-url=https://api-dev.openmind.org/api/core/tts --device=<optional> --rate=<optional>
 ```
-
 
 ## Port Usage
 
