@@ -145,6 +145,20 @@ Then you need to set the following environment variables in your `~/.bashrc` fil
 export CYCLONEDDS_HOME=$HOME/Documents/GitHub/cyclonedds/install
 ```
 
+#### Configure Network Settings (Unitree Only)
+
+You need to open the network settings and find the network interface that the robot connected. In IPv4 settings, set the method to `Manual` and add the following IP address:
+
+```
+192.168.123.xxx
+```
+
+and set the subnet mask to
+
+```
+255.255.255.0
+```
+
 #### CycloneDDS Configuration (Optional)
 
 You can create a CycloneDDS configuration file to customize its behavior. Create a file named `cyclonedds.xml` in your home directory:
@@ -154,7 +168,7 @@ You can create a CycloneDDS configuration file to customize its behavior. Create
   <Domain>
     <General>
       <Interfaces>
-        <NetworkInterface name="en0" priority="default" multicast="default" />
+        <NetworkInterface name="enP2p1s0" priority="default" multicast="default" />
       </Interfaces>
     </General>
     <Discovery>
