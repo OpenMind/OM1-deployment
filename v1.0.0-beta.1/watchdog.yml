@@ -4,7 +4,7 @@ services:
   watchdog:
     build:
       context: .
-    image: openmindagi/om1_ros2_sdk:latest
+    image: openmindagi/om1_ros2_sdk:v1.0.1-beta.1
     container_name: watchdog
     network_mode: host
     privileged: true

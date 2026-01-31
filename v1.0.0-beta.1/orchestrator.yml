@@ -1,15 +1,12 @@
 version: '3.8'
 
 services:
-  om1_sensor:
+  orchestrator:
     build:
       context: .
-    image: openmindagi/om1_ros2_sdk:latest
-    container_name: om1_sensor
+    image: openmindagi/om1_ros2_sdk:v1.0.1-beta.1
+    container_name: orchestrator
     network_mode: host
-    devices:
-      - /dev/ttyUSB0:/dev/ttyUSB0
-      - /dev/bus/usb:/dev/bus/usb
     privileged: true
     environment:
       - DISPLAY=${DISPLAY:-}
@@ -19,12 +16,13 @@ services:
       - CYCLONEDDS_URI=file:///app/om1_ros2_sdk/cyclonedds/cyclonedds.xml
       - CYCLONEDDS_INTERFACE=${CYCLONEDDS_INTERFACE:-enP2p1s0}
       - OM_API_KEY=${OM_API_KEY:-}
-      - OM_API_KEY_ID=${OM_API_KEY_ID:-}
-    command: "ros2 launch go2_sdk sensor_launch.py"
+    command: "ros2 launch orchestrator orchestrator_launch.py"
     volumes:
       - /dev:/dev
       - /run/udev:/run/udev:ro
       - /sys:/sys:ro
+      - /home/openmind/om1/orchestrator/maps:/app/om1_ros2_sdk/maps:rw
+      - /home/openmind/om1/orchestrator/locations:/app/om1_ros2_sdk/locations:rw
     logging:
       driver: "json-file"
       options:

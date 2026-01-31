@@ -4,13 +4,13 @@ services:
   zenoh_bridge:
     build:
       context: .
-    image: openmindagi/unitree_sdk:latest
+    image: openmindagi/om1_ros2_sdk:latest
     container_name: zenoh_bridge
     network_mode: host
     privileged: true
     environment:
       - ROS_DISTRO=humble
-    command: "zenoh-bridge-ros2dds -c /app/unitree_sdk/zenoh/zenoh_bridge_config.json5"
+    command: "zenoh-bridge-ros2dds -c /app/om1_ros2_sdk/zenoh/zenoh_bridge_config.json5"
     logging:
       driver: "json-file"
       options:

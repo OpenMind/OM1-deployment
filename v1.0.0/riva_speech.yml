@@ -1,0 +1,47 @@
+services:
+  riva_speech:
+    image: openmindagi/riva-speech-server:2.24.0-l4t-aarch64
+    container_name: riva_speech
+    restart: unless-stopped
+
+    ipc: host
+    runtime: nvidia
+
+    ports:
+      - "50051:50051"
+      - "50000:50000"
+      - "6790:6790"
+      - "6791:6791"
+      - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"
+      - "8888:8888"
+
+    environment:
+      - RIVA_SERVER_HTTP_PORT=50000
+      - NMT_REMOTE_ASR_SERVICE=0.0.0.0:50051
+      - NMT_REMOTE_TTS_SERVICE=0.0.0.0:50051
+      - LD_PRELOAD=
+      - RIVA_API_KEY=${RIVA_API_KEY}
+      - RIVA_API_NGC_ORG=${RIVA_API_NGC_ORG:-openmind-1}
+      - RIVA_EULA=${RIVA_EULA:-accept}
+
+    volumes:
+      - /home/openmind/riva_quickstart_arm64_v2.24.0/model_repository:/data
+
+    devices:
+      - /dev/bus/usb:/dev/bus/usb:rwm
+      - /dev/snd:/dev/snd:rwm
+
+    gpus:
+      - driver: nvidia
+        count: 1
+        capabilities: [gpu]
+
+    shm_size: "8g"
+    ulimits:
+      memlock: -1
+      stack: 67108864
+
+    security_opt:
+      - label:disable
