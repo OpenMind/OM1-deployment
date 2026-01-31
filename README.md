@@ -184,6 +184,14 @@ Then, set the `CYCLONEDDS_URI` environment variable in your `~/.bashrc` file:
 export CYCLONEDDS_URI=file://$HOME/cyclonedds.xml
 ```
 
+#### v4l2-ctl (For camera configuration)
+
+Install `v4l2-ctl` using the following command:
+
+```bash
+sudo apt install v4l-utils
+```
+
 ### System Services
 
 We assume you have bought the [brain pack](https://openmind.org/store). If you don't have it, you can skip this section based on your needs.
