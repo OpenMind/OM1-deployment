@@ -590,13 +590,14 @@ poetry run om1_tts --tts-url=https://api-dev.openmind.org/api/core/tts --device=
 
 ## Port Usage
 
+- 1935: MediaMTX RTMP Server
 - 6790: OM Riva ASR Websocket Server API
 - 6791: OM Riva TTS HTTP Server API
-- 8000: Riva NMT Local TTS/ASR API
-- 8001: Riva ASR Local API
-- 8002: Riva TTS Local API
+- 8000: MediaMTX RTMP Server API
+- 8001: MediaMTX HLS Server API
+- 8554: MediaMTX RTSP Server API
 - 8860: Qwen 30B Quantized API
 - 8880: Kokoro TTS API
-- 8888: Riva AI Orchestrator API
+- 8888: MediaMTX Streaming Server API
 - 50000: Riva Server API
 - 50051: Riva NMT Remote TTS/ASR API
