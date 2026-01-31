@@ -519,7 +519,7 @@ Download Riva Embedded version models for `Jetson 7.0`:
 ```bash
 ngc registry resource download-version nvidia/riva/riva_quickstart_arm64:2.24.0
 
-cd riva_quickstart_arm64_v2.17.0
+cd riva_quickstart_arm64_v2.24.0
 sudo bash riva_init.sh
 
 # initialize riva model locally
