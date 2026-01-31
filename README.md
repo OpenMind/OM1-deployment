@@ -363,14 +363,14 @@ pactl list short
 Make it executable:
 
 ```bash
-chmod +x /usr/local/bin/set-audio-defaults.sh`
+sudo chmod +x /usr/local/bin/set-audio-defaults.sh
 ```
 
 Create a systemd user service to run the script on login:
 
 ```bash
 mkdir -p ~/.config/systemd/user
-vim ~/.config/systemd/user/audio-defaults.service
+sudo vim ~/.config/systemd/user/audio-defaults.service
 ```
 
 Add the following content:
