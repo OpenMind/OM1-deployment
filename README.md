@@ -520,6 +520,9 @@ Enter team [no-team]. Choices: ['<YOUR_TEAM>', 'no-team']: <YOUR_TEAM>
 Enter ace [no-ace]. Choices: ['no-ace']: no-ace
 ```
 
+> [!WARNING]
+> `ngc cli` will create  a `.bash_profile` file if it does not exist. If you already have a `.bashrc` file, please make sure to merge the two files properly. Otherwise, your `bash` environment may not work as expected.
+
 ##### Download Riva Models
 
 Download Riva Embedded version models for `Jetson 7.0`:
