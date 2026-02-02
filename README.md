@@ -282,11 +282,30 @@ sudo apt install pulseaudio pulseaudio-module-bluetooth pulseaudio-utils pavucon
 Next, stop the `PipWire` daemon and start the `PulseAudio` daemon if it's not already running:
 
 ```bash
+systemctl --user mask pipewire.service
+systemctl --user mask pipewire.socket
 systemctl --user mask pipewire-pulse.service
+systemctl --user mask pipewire-pulse.socket
+systemctl --user mask wireplumber.service
 systemctl --user stop pipewire-pulse.service
 systemctl --user stop pipewire.service wireplumber.service
 systemctl --user disable pipewire.service wireplumber.service
 systemctl --user enable --now pulseaudio.service
+```
+
+Next, add the script to prevent `PulseAudio` from going into `auto-exit` mode.
+
+```bash
+mkdir -p ~/.config/pulse
+cat > ~/.config/pulse/client.conf << 'EOF'
+autospawn = yes
+daemon-binary = /usr/bin/pulseaudio
+EOF
+
+# Create daemon config to disable idle timeout
+cat > ~/.config/pulse/daemon.conf << 'EOF'
+exit-idle-time = -1
+EOF
 ```
 
 Now, you can restart the system to ensure `PulseAudio` is running properly.
