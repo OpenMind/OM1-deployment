@@ -11,6 +11,7 @@ services:
     environment:
       - OM_API_KEY=${OM_API_KEY}
       - OM_API_KEY_ID=${OM_API_KEY_ID}
+      - OM1_COMMAND=${OM1_COMMAND:-unitree_go2_modes}
       - OTA_UPDATER_SERVER_URL=${OTA_UPDATER_SERVER_URL:-wss://api.openmind.org/api/core/ota/updater}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
