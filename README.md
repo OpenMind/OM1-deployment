@@ -134,6 +134,8 @@ ros2 daemon start
 If you prefer to build CycloneDDS from source, use the following commands:
 
 ```
+cd Documents
+mkdir -p GitHub && cd GitHub
 git clone https://github.com/eclipse-cyclonedds/cyclonedds -b releases/0.10.x
 cd cyclonedds && mkdir build install && cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=../install -DBUILD_EXAMPLES=ON
@@ -223,10 +225,15 @@ done
 # Launch with autoplay permissions
 exec chromium \
   --kiosk http://$HOST:$PORT \
+  --start-fullscreen \
   --disable-infobars \
   --noerrdialogs \
   --autoplay-policy=no-user-gesture-required \
-  --disable-features=PreloadMediaEngagementData,MediaEngagementBypassAutoplayPolicies
+  --disable-features=PreloadMediaEngagementData,MediaEngagementBypassAutoplayPolicies \
+  --no-first-run \
+  --disable-session-crashed-bubble \
+  --disable-translate \
+  --window-position=0,0
 ```
 
 Make it executable:
