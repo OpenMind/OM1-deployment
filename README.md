@@ -449,6 +449,14 @@ vim ~/.bashrc
 export OM_API_KEY_ID="your_api_key_id_here"
 ```
 
+5. Set the robot type that you are using
+
+```bash
+vim ~/.bashrc
+
+export ROBOT_TYPE="go2"  # or "go1", "tron"
+```
+
 Now, reload your `Bash` profile to apply the changes:
 
 ```bash
