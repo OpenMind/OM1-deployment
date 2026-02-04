@@ -562,7 +562,7 @@ Enter ace [no-ace]. Choices: ['no-ace']: no-ace
 Download Riva Embedded version models for `Jetson 7.0`:
 
 ```bash
-ngc registry resource download-version nvidia/riva/riva_quickstart_arm64:2.24.0-l4t-aarch64
+ngc registry resource download-version nvidia/riva/riva_quickstart_arm64:2.24.0-l4t
 
 cd riva_quickstart_arm64_v2.24.0
 sudo bash riva_init.sh
@@ -597,7 +597,7 @@ source ~/.bashrc
 We create a `openmindagi/riva-speech-server:2.24.0-l4t-aarch64` docker image that has Riva ASR and TTS endpoints with the example code to run Riva services on Jetson devices. You can pull the image directly without downloading the models from NGC:
 
 ```bash
-docker pull openmindagi/riva-speech-server:2.24.0-l4t
+docker pull openmindagi/riva-speech-server:2.24.0-l4t-aarch64
 ```
 
 The dockerfile can be found [here](https://github.com/OpenMind/OM1-modules/blob/main/docker/Dockerfile.riva) and the docker-compose file can be found [here](https://github.com/OpenMind/OM1-deployment/blob/main/latest/riva_speech.yml).
