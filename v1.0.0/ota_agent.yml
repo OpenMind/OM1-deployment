@@ -12,6 +12,7 @@ services:
       - OM_API_KEY=${OM_API_KEY}
       - OM_API_KEY_ID=${OM_API_KEY_ID}
       - OM1_COMMAND=${OM1_COMMAND:-unitree_go2_modes}
+      - ROBOT_TYPE=${ROBOT_TYPE:-go2}
       - OTA_AGENT_SERVER_URL=${OTA_AGENT_SERVER_URL:-wss://api.openmind.org/api/core/ota/agent}
       - DOCKER_STATUS_URL=${DOCKER_STATUS_URL:-https://api.openmind.org/api/core/ota/agent/docker}
     volumes:
