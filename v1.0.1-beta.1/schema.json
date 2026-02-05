@@ -1,0 +1,8 @@
+{
+    "om1_sensor": {
+        "image": "openmindagi/om1_ros2_sdk:v1.0.1-beta.1",
+        "env": {
+            "ROBOT_TYPE": "go2"
+        }
+    }
+}
