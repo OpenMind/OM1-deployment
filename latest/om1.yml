@@ -9,6 +9,8 @@ services:
     container_name: om1
     restart: unless-stopped
     network_mode: host
+    env_file:
+      - /home/openmind/.ota/om1_latest.env
     environment:
       - ROS_DOMAIN_ID=0
       - CYCLONEDDS_HOME=/app/cyclonedds/install

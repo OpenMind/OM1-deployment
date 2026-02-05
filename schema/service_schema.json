@@ -1,0 +1,58 @@
+{
+    "latest": {
+        "om1": {
+            "image": "openmindagi/om1:latest",
+            "env": {
+                "OM1_COMMAND": "unitree_go2_modes"
+            }
+        },
+        "om1_sensor": {
+            "image": "openmindagi/om1_ros2_sdk:latest",
+            "env": {
+                "ROBOT_TYPE": "go2"
+            }
+        },
+        "ota_agent": {
+            "image": "openmindagi/ota:latest",
+            "env": {
+                "OM1_COMMAND": "unitree_go2_modes",
+                "ROBOT_TYPE": "go2"
+            }
+        },
+        "ota_updater": {
+            "image": "openmindagi/ota:latest",
+            "env": {
+                "OM1_COMMAND": "unitree_go2_modes",
+                "ROBOT_TYPE": "go2"
+            }
+        }
+    },
+    "v1.0.0": {
+        "om1": {
+            "image": "openmindagi/om1:v1.0.0",
+            "env": {
+                "OM1_COMMAND": "unitree_go2_modes"
+            }
+        },
+        "om1_sensor": {
+            "image": "openmindagi/om1_ros2_sdk:v1.0.0",
+            "env": {
+                "ROBOT_TYPE": "go2"
+            }
+        },
+        "ota_agent": {
+            "image": "openmindagi/ota:v1.0.0",
+            "env": {
+                "OM1_COMMAND": "unitree_go2_modes",
+                "ROBOT_TYPE": "go2"
+            }
+        },
+        "ota_updater": {
+            "image": "openmindagi/ota:v1.0.0",
+            "env": {
+                "OM1_COMMAND": "unitree_go2_modes",
+                "ROBOT_TYPE": "go2"
+            }
+        }
+    }
+}

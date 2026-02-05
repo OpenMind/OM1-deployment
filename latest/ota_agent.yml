@@ -8,6 +8,8 @@ services:
     image: openmindagi/ota:latest
     container_name: ota_agent
     restart: unless-stopped
+    env_file:
+      - /home/openmind/.ota/ota_agent_latest.env
     environment:
       - OM_API_KEY=${OM_API_KEY}
       - OM_API_KEY_ID=${OM_API_KEY_ID}
