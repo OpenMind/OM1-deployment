@@ -1,0 +1,8 @@
+{
+    "om1": {
+        "image": "openmindagi/om1:latest",
+        "env": {
+            "OM1_COMMAND": "unitree_go2_modes"
+        }
+    }
+}
