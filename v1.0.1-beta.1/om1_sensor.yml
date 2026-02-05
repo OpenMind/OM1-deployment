@@ -7,8 +7,6 @@ services:
     image: openmindagi/om1_ros2_sdk:v1.0.1-beta.1
     container_name: om1_sensor
     network_mode: host
-    env_file:
-      - /home/openmind/.ota/om1_sensor_v1.0.1-beta.1.env
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
       - /dev/bus/usb:/dev/bus/usb

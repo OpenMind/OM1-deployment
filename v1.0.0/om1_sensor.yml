@@ -11,8 +11,6 @@ services:
       - /dev/ttyUSB0:/dev/ttyUSB0
       - /dev/bus/usb:/dev/bus/usb
     privileged: true
-    env_file:
-      - /home/openmind/.ota/om1_sensor_v1.0.0.env
     environment:
       - DISPLAY=${DISPLAY:-}
       - QT_X11_NO_MITSHM=1
