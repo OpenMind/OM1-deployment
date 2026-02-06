@@ -13,6 +13,7 @@ services:
     runtime: nvidia
     shm_size: "8g"
     environment:
+      - ROBOT_TYPE=${ROBOT_TYPE:-go2}
       - CAMERA_INDEX=${CAMERA_INDEX:-/dev/video6}
       - MICROPHONE_INDEX=${MICROPHONE_INDEX:-default_mic_aec}
       - MIC_RNNOISE_MODEL_PATH=${MIC_RNNOISE_MODEL_PATH:-/app/om1_video_processor/models/rnnoise.rnnn}
