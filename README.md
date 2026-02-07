@@ -432,6 +432,18 @@ systemctl --user enable audio-defaults.service
 systemctl --user start audio-defaults.service
 ```
 
+Now, you need to export `USER ID` as an environment variable in your `~/.bashrc` file:
+
+```bash
+export HOST_USER_ID=$(id -u)
+```
+
+to allow the docker containers to access the `PulseAudio` server properly. Then, reload your `Bash` profile to apply the changes:
+
+```bash
+source ~/.bashrc
+```
+
 ### Enable Cloud Docker Management Service
 
 The cloud docker management service allows remote management of Docker containers via a web interface. To enable this service, follow these steps:
