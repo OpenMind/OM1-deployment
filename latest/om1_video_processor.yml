@@ -17,7 +17,7 @@ services:
       - CAMERA_INDEX=${CAMERA_INDEX:-/dev/video6}
       - MICROPHONE_INDEX=${MICROPHONE_INDEX:-default_mic_aec}
       - MIC_RNNOISE_MODEL_PATH=${MIC_RNNOISE_MODEL_PATH:-/app/om1_video_processor/models/rnnoise.rnnn}
-      - PULSE_SERVER=unix:/run/user/2001/pulse/native
+      - PULSE_SERVER=unix:/run/user/${HOST_USER_ID:-2001}/pulse/native
       - PULSE_COOKIE=/root/.config/pulse/cookie
       - OM_API_KEY_ID=${OM_API_KEY_ID}
       - OM_API_KEY=${OM_API_KEY}
@@ -25,7 +25,7 @@ services:
       - EMBEDS_DIR=/data/embeds
     volumes:
       - /dev/snd:/dev/snd:rw
-      - /run/user/2001/pulse:/run/user/2001/pulse:rw
+      - /run/user/${HOST_USER_ID:-2001}/pulse:/run/user/${HOST_USER_ID:-2001}/pulse:rw
       - /home/openmind/.config/pulse/cookie:/root/.config/pulse/cookie:ro
       - /home/openmind/om1/om1_video_processor/gallery:/data/gallery:rw
       - /home/openmind/om1/om1_video_processor/embeds:/data/embeds:rw
