@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  om1_sensor:
+    build:
+      context: .
+    image: openmindagi/om1_ros2_sdk:v1.0.1-beta.2
+    container_name: om1_sensor
+    network_mode: host
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/bus/usb:/dev/bus/usb
+    privileged: true
+    environment:
+      - DISPLAY=${DISPLAY:-}
+      - QT_X11_NO_MITSHM=1
+      - ROS_DOMAIN_ID=0
+      - CYCLONEDDS_HOME=/app/cyclonedds/install
+      - CYCLONEDDS_URI=file:///app/om1_ros2_sdk/cyclonedds/cyclonedds.xml
+      - CYCLONEDDS_INTERFACE=${CYCLONEDDS_INTERFACE:-enP2p1s0}
+      - OM_API_KEY=${OM_API_KEY:-}
+      - OM_API_KEY_ID=${OM_API_KEY_ID:-}
+      - ROBOT_TYPE=${ROBOT_TYPE:-go2}
+    command: "ros2 launch ${ROBOT_TYPE}_sdk sensor_launch.py"
+    volumes:
+      - /dev:/dev
+      - /run/udev:/run/udev:ro
+      - /sys:/sys:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: unless-stopped
