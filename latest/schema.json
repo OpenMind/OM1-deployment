@@ -2,7 +2,9 @@
     "om1": {
         "image": "openmindagi/om1:latest",
         "env": {
-            "OM1_COMMAND": "unitree_go2_modes"
+            "OM1_COMMAND": "unitree_go2_modes",
+            "KOKORO_BASE_URL": "http://omr2.local:8880/v1",
+            "QWEN_BASE_URL": "http://omr2.local:8860/v1"
         }
     }
 }
