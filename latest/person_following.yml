@@ -1,0 +1,31 @@
+services:
+  person-following:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: openmindagi/person_following:latest
+    container_name: person_following
+    runtime: nvidia
+    network_mode: host
+    privileged: true
+    restart: unless-stopped
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - DISPLAY=${DISPLAY:-:0}
+      - QT_X11_NO_MITSHM=1
+      - ROBOT_TYPE=${ROBOT_TYPE:-go2}
+      - DISPLAY_ENABLED=${DISPLAY_ENABLED:-false}
+      - HF_TOKEN=${HF_TOKEN:-}
+    volumes:
+      - /dev:/dev
+      - /run/udev:/run/udev:ro
+      - /sys:/sys:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    command: ros2 launch /opt/person_following/launch/greeting_launch.py display:=${DISPLAY_ENABLED:-false}

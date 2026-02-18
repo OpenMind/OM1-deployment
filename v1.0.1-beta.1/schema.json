@@ -1,1 +1,8 @@
-{}
+{
+    "om1": {
+        "image": "openmindagi/om1:v1.0.1-beta.1",
+        "env": {
+            "OM1_COMMAND": "unitree_go2_modes"
+        }
+    }
+}

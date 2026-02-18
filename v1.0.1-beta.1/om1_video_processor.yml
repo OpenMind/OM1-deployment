@@ -1,35 +1,36 @@
 version: '3.8'
 
 services:
-  om1:
+  om1_video_processor:
     build:
       context: .
       dockerfile: Dockerfile
-    image: openmindagi/om1:latest
-    container_name: om1
+    image: openmindagi/om1_video_processor:v1.0.1-beta.1
+    container_name: om1_video_processor
     restart: unless-stopped
     network_mode: host
-    env_file:
-      - /app/.ota/om1_latest.env
+    privileged: true
+    runtime: nvidia
+    shm_size: "8g"
     environment:
-      - ROS_DOMAIN_ID=0
-      - CYCLONEDDS_HOME=/app/cyclonedds/install
-      - CYCLONEDDS_URI=file:///app/OM1/cyclonedds/cyclonedds.xml
-      - CMAKE_PREFIX_PATH=/app/cyclonedds/install
-      - OM_API_KEY=${OM_API_KEY}
-      - VIRTUAL_ENV=/app/OM1/.venv
-      - PATH=/app/OM1/.venv/bin:$PATH
-      - XDG_RUNTIME_DIR=/run/user/${HOST_USER_ID:-2001}
+      - CAMERA_INDEX=${CAMERA_INDEX:-/dev/video6}
+      - MICROPHONE_INDEX=${MICROPHONE_INDEX:-default_mic_aec}
+      - MIC_RNNOISE_MODEL_PATH=${MIC_RNNOISE_MODEL_PATH:-/app/om1_video_processor/models/rnnoise.rnnn}
       - PULSE_SERVER=unix:/run/user/${HOST_USER_ID:-2001}/pulse/native
       - PULSE_COOKIE=/root/.config
+      - OM_API_KEY_ID=${OM_API_KEY_ID}
+      - OM_API_KEY=${OM_API_KEY}
+      - GALLERY_DIR=/data/gallery
+      - EMBEDS_DIR=/data/embeds
     volumes:
-      - /home/openmind/om1/om1/config:/app/OM1/config
       - /dev/snd:/dev/snd:rw
       - /run/user/${HOST_USER_ID:-2001}/pulse:/run/user/${HOST_USER_ID:-2001}/pulse:rw
       - /home/openmind/.config/pulse/cookie:/root/.config/pulse/cookie:ro
+      - /home/openmind/om1/om1_video_processor/gallery:/data/gallery:rw
+      - /home/openmind/om1/om1_video_processor/embeds:/data/embeds:rw
     devices:
       - /dev/snd:/dev/snd
-      - /dev/video0:/dev/video0
+      - /dev/video6:/dev/video6
     logging:
       driver: "json-file"
       options:
@@ -42,4 +43,3 @@ services:
       - apparmor:unconfined
     group_add:
       - audio
-    command: ["${OM1_COMMAND:-unitree_go2_modes}"]
