@@ -194,6 +194,109 @@ Install `v4l2-ctl` using the following command:
 sudo apt install v4l-utils
 ```
 
+#### USB Camera Udev Rules (For persistent device names)
+
+USB cameras can be assigned different `/dev/videoX` numbers on each boot depending on the order they are detected. To create persistent symlinks (e.g., `/dev/usbcam`, `/dev/insta360`), set up udev rules.
+
+##### Step 1: List your video devices
+
+```bash
+v4l2-ctl --list-devices
+```
+
+Example output:
+
+```
+NVIDIA Tegra Video Input Device (platform:tegra-capture-vi):
+    /dev/media0
+
+Arducam USB Camera: Arducam USB (usb-a80aa10000.usb-2):
+    /dev/video6
+    /dev/video7
+    /dev/video8
+    /dev/video9
+    /dev/media3
+
+Intel(R) RealSense(TM) Depth Ca (usb-a80aa10000.usb-3.2):
+    /dev/video0
+    /dev/video1
+    /dev/video2
+    /dev/video3
+    /dev/video4
+    /dev/video5
+    /dev/media1
+    /dev/media2
+
+Insta360 Link 2C: Insta360 Link (usb-a80aa10000.usb-4.1.4.2):
+    /dev/video10
+    /dev/video11
+    /dev/media4
+```
+
+##### Step 2: Get device attributes
+
+For each camera you want to create a symlink for, get its vendor and product IDs. Use the first `/dev/videoX` listed for that device:
+
+```bash
+udevadm info --query=all --name=/dev/video6 | grep -E "ID_VENDOR_ID|ID_MODEL_ID"
+```
+
+Example output:
+
+```
+E: ID_VENDOR_ID=0c45
+E: ID_MODEL_ID=6366
+```
+
+##### Step 3: Create udev rules
+
+Create a udev rules file for your cameras:
+
+```bash
+sudo vim /etc/udev/rules.d/99-usb-cameras.rules
+```
+
+Add rules using the vendor and product IDs from Step 2. Replace `SYMLINK` with your desired device name:
+
+```
+# Arducam USB Camera -> /dev/usbcam
+SUBSYSTEM=="video4linux", ATTRS{idVendor}=="0c45", ATTRS{idProduct}=="6366", ATTR{index}=="0", SYMLINK+="usbcam", MODE="0666"
+
+# Insta360 Link 2C -> /dev/insta360
+SUBSYSTEM=="video4linux", ATTRS{idVendor}=="2e1a", ATTRS{idProduct}=="4c03", ATTR{index}=="0", SYMLINK+="insta360", MODE="0666"
+```
+
+> [!NOTE]
+> - Replace `idVendor` and `idProduct` values with your camera's IDs from Step 2.
+> - `ATTR{index}=="0"` ensures only the primary video device gets the symlink (cameras often register multiple `/dev/videoX` entries).
+> - `MODE="0666"` allows read/write access without sudo.
+
+##### Step 4: Apply the rules
+
+Reload udev rules and trigger them:
+
+```bash
+sudo udevadm control --reload-rules
+sudo udevadm trigger --subsystem-match=video4linux
+```
+
+##### Step 5: Verify symlinks
+
+```bash
+ls -la /dev/usbcam /dev/insta360
+```
+
+Example output:
+
+```
+lrwxrwxrwx 1 root root 7 Feb 20 17:00 /dev/insta360 -> video10
+lrwxrwxrwx 1 root root 6 Feb 20 17:00 /dev/usbcam -> video6
+```
+
+Now you can use `/dev/usbcam` or `/dev/insta360` in your applications, and they will always point to the correct camera regardless of which `/dev/videoX` number the kernel assigns.
+
+###
+
 ### System Services
 
 We assume you have bought the [brain pack](https://openmind.org/store). If you don't have it, you can skip this section based on your needs.
