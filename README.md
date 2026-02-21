@@ -192,7 +192,9 @@ Install `v4l2-ctl` using the following command:
 
 ```bash
 sudo apt install v4l-utils
-```# USB Camera Udev Rules (For persistent device names)
+```
+
+#### USB Camera Udev Rules (For persistent device names)
 
 USB cameras can be assigned different `/dev/videoX` numbers on each boot depending on the order they are detected. To create persistent symlinks (e.g., `/dev/usbcam`, `/dev/insta360`), set up udev rules.
 
