@@ -1,6 +1,6 @@
 services:
   text_embedding:
-    image: openmindagi/embedding-service:e5-small-v2-aarch64
+    image: openmindagi/embedding_service:e5-small-v2-aarch64
     container_name: text_embedding
     restart: unless-stopped
 
