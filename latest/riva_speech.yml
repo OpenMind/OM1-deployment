@@ -19,6 +19,8 @@ services:
       - RIVA_API_KEY=${RIVA_API_KEY}
       - RIVA_API_NGC_ORG=${RIVA_API_NGC_ORG:-openmind-1}
       - RIVA_EULA=${RIVA_EULA:-accept}
+      - PYTHON_ARGS=--server-mode --ws-host=0.0.0.0 --http-host=0.0.0.0 --start-history=150 --start-threshold=0.50 --stop-history-eou=400 --stop-threshold-eou=0.85 --stop-history=800 --stop-threshold=0.92 --automatic-punctuation --boosted-lm-words OpenMind --boosted-lm-words Bits --boosted-lm-words hello --boosted-lm-words GTC --boosted-lm-words Unitree --boosted-lm-words robot --boosted-lm-words OM1 --boosted-lm-words NVIDIA --boosted-lm-score 100.0
+      - GLOG_minloglevel=2
 
     volumes:
       - /home/openmind/riva_quickstart_arm64_v2.24.0/model_repository:/data
