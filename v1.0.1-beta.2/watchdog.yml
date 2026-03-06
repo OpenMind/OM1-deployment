@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  watchdog:
+    build:
+      context: .
+    image: openmindagi/om1_ros2_sdk:v1.0.1-beta.2
+    container_name: watchdog
+    network_mode: host
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - SENSOR_TIMEOUT_DURATION=30.0
+    command: "python3 watchdog/watch_sensor.py"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    restart: unless-stopped

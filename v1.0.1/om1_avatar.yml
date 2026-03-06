@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  om1_avatar:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: openmindagi/om1_avatar:v1.0.1
+    container_name: om1_avatar
+    environment:
+      - VITE_OM_API_KEY=${OM_API_KEY}
+      - VITE_OM_API_KEY_ID=${OM_API_KEY_ID}
+    restart: unless-stopped
+    network_mode: host
+    ports:
+      - "4173:4173"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

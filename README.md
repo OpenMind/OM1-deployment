@@ -194,16 +194,22 @@ Install `v4l2-ctl` using the following command:
 sudo apt install v4l-utils
 ```
 
+You can use the following command to list all video devices and their corresponding indices:
+
+```bash
+v4l2-ctl --list-devices
+```
+
 ### System Services
 
 We assume you have bought the [brain pack](https://openmind.org/store). If you don't have it, you can skip this section based on your needs.
 
 #### Screen Animation Service
 
-To enable the screen animation service, install `unclutter` first to hide the mouse cursor:
+To enable the screen animation service, install `unclutter` and `wmctrl`:
 
 ```bash
-sudo apt install unclutter
+sudo apt install unclutter wmctrl
 ```
 
 Then, add the script to `/usr/local/bin/start-kiosk.sh` and make it executable:
@@ -222,8 +228,8 @@ while ! nc -z $HOST $PORT; do
   sleep 0.1
 done
 
-# Launch with autoplay permissions
-exec chromium \
+# Launch Chromium in background
+chromium \
   --kiosk http://$HOST:$PORT \
   --start-fullscreen \
   --disable-infobars \
@@ -233,7 +239,24 @@ exec chromium \
   --no-first-run \
   --disable-session-crashed-bubble \
   --disable-translate \
-  --window-position=0,0
+  --window-position=0,0 &
+
+CHROMIUM_PID=$!
+
+# Wait for Chromium window to appear
+sleep 3
+
+# Force fullscreen using wmctrl (more reliable than --kiosk flag)
+for i in {1..10}; do
+  if wmctrl -r "Chromium" -b add,fullscreen 2>/dev/null; then
+    echo "Fullscreen applied successfully"
+    break
+  fi
+  sleep 1
+done
+
+# Keep script running to maintain the service
+wait $CHROMIUM_PID
 ```
 
 Make it executable:
@@ -644,6 +667,7 @@ poetry run om1_tts --tts-url=https://api-dev.openmind.org/api/core/tts --device=
 - 6791: OM Riva TTS HTTP Server API
 - 8000: MediaMTX RTMP Server API
 - 8001: MediaMTX HLS Server API
+- 8100: Text Embedding Service API
 - 8554: MediaMTX RTSP Server API
 - 8860: Qwen 30B Quantized API
 - 8880: Kokoro TTS API
