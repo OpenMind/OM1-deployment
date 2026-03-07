@@ -672,5 +672,6 @@ poetry run om1_tts --tts-url=https://api-dev.openmind.org/api/core/tts --device=
 - 8860: Qwen 30B Quantized API
 - 8880: Kokoro TTS API
 - 8888: MediaMTX Streaming Server API
+- 8889: MediaMTX WebRTC Server API
 - 50000: Riva Server API
 - 50051: Riva NMT Remote TTS/ASR API
