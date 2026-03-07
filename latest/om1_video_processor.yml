@@ -12,6 +12,8 @@ services:
     privileged: true
     runtime: nvidia
     shm_size: "8g"
+    env_file:
+      - /app/.ota/om1_video_processor_latest.env
     environment:
       - ROBOT_TYPE=${ROBOT_TYPE:-go2}
       - CAMERA_INDEX=${CAMERA_INDEX:-/dev/video6}
