@@ -12,6 +12,8 @@ services:
     privileged: true
     runtime: nvidia
     shm_size: "8g"
+    env_file:
+      - /app/.ota/om1_video_processor_v1.0.0.env
     environment:
       - ROBOT_TYPE=${ROBOT_TYPE:-go2}
       - CAMERA_INDEX=${CAMERA_INDEX:-/dev/video6}
@@ -21,7 +23,6 @@ services:
       - PULSE_COOKIE=/root/.config
       - OM_API_KEY_ID=${OM_API_KEY_ID}
       - OM_API_KEY=${OM_API_KEY}
-      - ENABLE_CLOUD_STREAMING=${ENABLE_CLOUD_STREAMING:-true}
       - GALLERY_DIR=/data/gallery
       - EMBEDS_DIR=/data/embeds
     volumes:
