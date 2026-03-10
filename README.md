@@ -566,7 +566,6 @@ JetPack 7.0 may have some kernel issues that can not detect RealSense D435i with
 cd ~
 git clone https://github.com/realsenseai/librealsense.git
 cd librealsense
-git checkout development
 ./scripts/patch-realsense-ubuntu-L4T.sh
 ```
 
