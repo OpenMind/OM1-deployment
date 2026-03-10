@@ -558,6 +558,26 @@ docker ps | grep ota_agent
 
 You can now manage and update your Docker containers remotely via the [OpenMind Portal](https://portal.openmind.org).
 
+### Patch Kernel
+
+JetPack 7.0 may have some kernel issues that can not detect RealSense D435i with IMU. You can patch the kernel with the following commands:
+
+```bash
+cd ~
+git clone https://github.com/realsenseai/librealsense.git
+cd librealsense
+git checkout development
+./scripts/patch-realsense-ubuntu-L4T.sh
+```
+
+> [!NOTE]
+> If the kernel has not been patched, you may encounter issues with `om1-sensor` and find these error messages in the logs:
+> ```
+> [realsense2_camera_node-2]  10/03 19:29:52,565 WARNING [281473399384288] (ds-motion-common.cpp:452) No HID info provided, IMU is disabled
+> [realsense2_camera_node-2]  10/03 19:29:52,566 ERROR [281473399384288] (rs.cpp:256) [rs2_create_device( info_list:0xffff8401fbc0, index:0 ) UNKNOWN] bad optional access
+> [realsense2_camera_node-2]  10/03 19:29:52,566 ERROR [281473399384288] (rs.cpp:256) [rs2_delete_device( device:nullptr ) UNKNOWN] null pointer passed for argument "device"
+> ```
+
 ### Model Downloads
 
 #### Riva Models
