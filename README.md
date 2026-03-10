@@ -558,16 +558,25 @@ docker ps | grep ota_agent
 
 You can now manage and update your Docker containers remotely via the [OpenMind Portal](https://portal.openmind.org).
 
-### Patch Kernel
+### Patch Kernel (Optional)
 
 JetPack 7.0 may have some kernel issues that can not detect RealSense D435i with IMU. You can patch the kernel with the following commands:
 
 ```bash
 cd ~
-git clone https://github.com/realsenseai/librealsense.git
+git clone https://github.com/OpenMind/librealsense.git
 cd librealsense
+git checkout replace-nv-tegra
 ./scripts/patch-realsense-ubuntu-L4T.sh
 ```
+
+> [!IMPORTANT]
+> If you see these error messages in the logs, it is fine and the kernel files have been copied and pasted. Please go ahead and restart the system.
+> Copying the patched modules to /lib/modules/6.8.12-tegra/extra/
+> Insert the modified kernel modules
+> Unload kernel modules
+> modprobe: FATAL: Module videodev is in use.
+> Failed to unload module videodev. Error type 1. Try rebooting
 
 > [!NOTE]
 > If the kernel has not been patched, you may encounter issues with `om1-sensor` and find these error messages in the logs:
@@ -576,6 +585,7 @@ cd librealsense
 > [realsense2_camera_node-2]  10/03 19:29:52,566 ERROR [281473399384288] (rs.cpp:256) [rs2_create_device( info_list:0xffff8401fbc0, index:0 ) UNKNOWN] bad optional access
 > [realsense2_camera_node-2]  10/03 19:29:52,566 ERROR [281473399384288] (rs.cpp:256) [rs2_delete_device( device:nullptr ) UNKNOWN] null pointer passed for argument "device"
 > ```
+
 
 ### Model Downloads
 
