@@ -572,11 +572,13 @@ git checkout replace-nv-tegra
 
 > [!IMPORTANT]
 > If you see these error messages in the logs, it is fine and the kernel files have been copied and pasted. Please go ahead and restart the system.
+> ```
 > Copying the patched modules to /lib/modules/6.8.12-tegra/extra/
 > Insert the modified kernel modules
 > Unload kernel modules
 > modprobe: FATAL: Module videodev is in use.
 > Failed to unload module videodev. Error type 1. Try rebooting
+> ```
 
 > [!NOTE]
 > If the kernel has not been patched, you may encounter issues with `om1-sensor` and find these error messages in the logs:
