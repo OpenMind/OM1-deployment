@@ -2,7 +2,25 @@
 
 This repository contains Docker Compose configurations for deploying the OM1 robot system.
 
-## Instructions
+## Optional Environment Variables
+
+### OM1
+
+- OM1_SKIP_INTERNET_CHECK: Set this variable to `true` to skip the internet connectivity check during the startup sequence. This is useful if you are in an environment with restricted internet access or if you want to bypass the check.
+
+### OM1 Video Processor
+
+- ENABLE_CLOUD_STREAMING: Set this variable to `false` to disable the cloud streaming service. By default, the video processor will stream video data to the cloud for remote monitoring and processing. Setting this variable to `false` will disable this functionality and keep all video processing local to the device.
+
+### Riva Speech
+
+- BOOSTED_LM_WORDS: This variable allows you to specify a list of words that you want to boost in the language model for Riva ASR. By providing a comma-separated list of words, you can improve the recognition accuracy for those specific words. For example, if you want to boost the recognition of the words "OpenMind" and "Jetson", you can set this variable as follows:
+
+```
+export BOOSTED_LM_WORDS="OpenMind,Jetson"
+```
+
+## Installation Instructions
 
 For a fresh Thor (JetPack 7.0) system, follow these steps to set up OM1:
 
