@@ -20,6 +20,10 @@ This repository contains Docker Compose configurations for deploying the OM1 rob
 export BOOSTED_LM_WORDS="OpenMind,Jetson"
 ```
 
+### OM1 ROS2 SDK
+
+- TRON_ACCID: If you are using the OM1 ROS2 SDK with a Tron robot, you need to set this variable to your Tron Robot ID. This allows the ROS2 SDK to authenticate and communicate with your Tron robot properly. You can find your Tron Robot ID in the Tron app or dashboard.
+
 ## Installation Instructions
 
 For a fresh Thor (JetPack 7.0) system, follow these steps to set up OM1:
