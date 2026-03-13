@@ -10,7 +10,7 @@ services:
     restart: unless-stopped
     network_mode: host
     env_file:
-      - /app/.ota/om1_v1.0.1-beta.1.env
+      - /app/.ota/om1_v1.0.1-beta.3.env
     environment:
       - ROS_DOMAIN_ID=0
       - CYCLONEDDS_HOME=/app/cyclonedds/install
