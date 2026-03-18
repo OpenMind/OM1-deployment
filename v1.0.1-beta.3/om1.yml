@@ -30,7 +30,6 @@ services:
       - /var/run/avahi-daemon/socket:/var/run/avahi-daemon/socket
     devices:
       - /dev/snd:/dev/snd
-      - /dev/video0:/dev/video0
     logging:
       driver: "json-file"
       options:
