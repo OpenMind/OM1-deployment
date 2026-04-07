@@ -216,9 +216,9 @@ Install `v4l2-ctl` using the following command:
 sudo apt install v4l-utils
 ```
 
-#### USB Camera Udev Rules (For persistent device names)
+#### USB Camera Udev Rules (Optional)
 
-USB cameras can be assigned different `/dev/videoX` numbers on each boot depending on the order they are detected. To create persistent symlinks (e.g., `/dev/usbcam`, `/dev/insta360`), set up udev rules.
+USB cameras can be assigned different `/dev/videoX` numbers on each boot depending on the order they are detected. To create persistent symlinks (e.g., `/dev/usbcam`), set up udev rules.
 
 ##### Step 1: List your video devices
 
@@ -248,11 +248,6 @@ Intel(R) RealSense(TM) Depth Ca (usb-a80aa10000.usb-3.2):
     /dev/video5
     /dev/media1
     /dev/media2
-
-Insta360 Link 2C: Insta360 Link (usb-a80aa10000.usb-4.1.4.2):
-    /dev/video10
-    /dev/video11
-    /dev/media4
 ```
 
 ##### Step 2: Get device attributes
@@ -283,9 +278,6 @@ Add rules using the vendor and product IDs from Step 2. Replace `SYMLINK` with y
 ```
 # Arducam USB Camera -> /dev/usbcam
 SUBSYSTEM=="video4linux", ATTRS{idVendor}=="0c45", ATTRS{idProduct}=="6366", ATTR{index}=="0", SYMLINK+="usbcam", MODE="0666"
-
-# Insta360 Link 2C -> /dev/insta360
-SUBSYSTEM=="video4linux", ATTRS{idVendor}=="2e1a", ATTRS{idProduct}=="4c03", ATTR{index}=="0", SYMLINK+="insta360", MODE="0666"
 ```
 
 > [!NOTE]
@@ -305,17 +297,16 @@ sudo udevadm trigger --subsystem-match=video4linux
 ##### Step 5: Verify symlinks
 
 ```bash
-ls -la /dev/usbcam /dev/insta360
+ls -la /dev/usbcam
 ```
 
 Example output:
 
 ```
-lrwxrwxrwx 1 root root 7 Feb 20 17:00 /dev/insta360 -> video10
 lrwxrwxrwx 1 root root 6 Feb 20 17:00 /dev/usbcam -> video6
 ```
 
-Now you can use `/dev/usbcam` or `/dev/insta360` in your applications, and they will always point to the correct camera regardless of which `/dev/videoX` number the kernel assigns.
+Now you can use `/dev/usbcam` in your applications, and they will always point to the correct camera regardless of which `/dev/videoX` number the kernel assigns.
 
 ### System Services
 
