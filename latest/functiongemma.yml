@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  functiongemma:
+    image: openmindagi/functiongemma_service:latest
+    container_name: functiongemma
+
+    network_mode: host
+    runtime: nvidia
+
+    ports:
+      - "8200:8200"
+
+    gpus:
+      - driver: nvidia
+        count: 1
+        capabilities: [gpu]
+
+    shm_size: "4g"
+    ulimits:
+      memlock: -1
+      stack: 67108864
+
+    restart: unless-stopped
