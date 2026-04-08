@@ -319,7 +319,7 @@ Now you can use `/dev/usbcam` or `/dev/insta360` in your applications, and they 
 
 ### System Services
 
-We assume you have bought the [brain pack](https://openmind.org/store). If you don't have it, you can skip this section based on your needs.
+We assume you have bought the [brain pack](https://openmind.com/store). If you don't have it, you can skip this section based on your needs.
 
 #### Screen Animation Service
 
@@ -588,9 +588,9 @@ source ~/.bashrc
 
 The cloud docker management service allows remote management of Docker containers via a web interface. To enable this service, follow these steps:
 
-1. Sign up for an account on [OpenMind Portal](https://portal.openmind.org).
+1. Sign up for an account on [OpenMind Portal](https://portal.openmind.com).
 
-2. Create your OpenMind API key from the [Dashboard](https://portal.openmind.org) page.
+2. Create your OpenMind API key from the [Dashboard](https://portal.openmind.com) page.
 
 3. Set the API key as an environment variable in your `Bash` profile:
 
@@ -600,7 +600,7 @@ vim ~/.bashrc
 export OM_API_KEY="your_api_key_here"
 ```
 
-4. Get the API Key ID from the [Dashboard](https://portal.openmind.org) page. The API Key ID is a 16-digit character string, such as `om1_live_<16 characters>`. Now, export the API Key ID as an environment variable:
+4. Get the API Key ID from the [Dashboard](https://portal.openmind.com) page. The API Key ID is a 16-digit character string, such as `om1_live_<16 characters>`. Now, export the API Key ID as an environment variable:
 
 ```bash
 vim ~/.bashrc
@@ -624,7 +624,7 @@ source ~/.bashrc
 
 #### Setup OTA Update Services
 
-To enable the Over-The-Air (OTA) update service for Docker containers, you need to set up two docker services: `ota_agent` and `ota_updater`. These services will allow you to manage and update your Docker containers remotely via the [OpenMind Portal](https://portal.openmind.org).
+To enable the Over-The-Air (OTA) update service for Docker containers, you need to set up two docker services: `ota_agent` and `ota_updater`. These services will allow you to manage and update your Docker containers remotely via the [OpenMind Portal](https://portal.openmind.com).
 
 To create a `ota_upater.yml` file, follow these steps:
 
@@ -673,7 +673,7 @@ docker ps | grep ota_updater
 docker ps | grep ota_agent
 ```
 
-You can now manage and update your Docker containers remotely via the [OpenMind Portal](https://portal.openmind.org).
+You can now manage and update your Docker containers remotely via the [OpenMind Portal](https://portal.openmind.com).
 
 ### Patch Kernel (Optional)
 
@@ -786,7 +786,7 @@ docker pull openmindagi/riva-speech-server:2.24.0-l4t-aarch64
 The dockerfile can be found [here](https://github.com/OpenMind/OM1-modules/blob/main/docker/Dockerfile.riva) and the docker-compose file can be found [here](https://github.com/OpenMind/OM1-deployment/blob/main/latest/riva_speech.yml).
 
 >[!NOTE]
-> Once you download the models from NGC and export the environment variables, you can use [OpenMind Portal](https://portal.openmind.org) to download Riva dockerfile and run Riva services.
+> Once you download the models from NGC and export the environment variables, you can use [OpenMind Portal](https://portal.openmind.com) to download Riva dockerfile and run Riva services.
 
 Once you have Riva services running, you can use the following script to test the ASR and TTS endpoints:
 
@@ -805,7 +805,7 @@ poetry install
 python3 -m om1_speech.main --remote-url=ws://localhost:6790
 
 # Test TTS
-poetry run om1_tts --tts-url=https://api-dev.openmind.org/api/core/tts --device=<optional> --rate=<optional>
+poetry run om1_tts --tts-url=https://api-dev.openmind.com/api/core/tts --device=<optional> --rate=<optional>
 ```
 
 ## Port Usage

@@ -3,7 +3,7 @@
 # Script to generate checksums for OTA deployment files
 # Output format: JSON with service name, tag, S3 URL, file checksum, and Docker image SHA256
 
-BASE_S3_URL="https://assets.openmind.org/ota"
+BASE_S3_URL="https://assets.openmind.com/ota"
 OUTPUT_FILE="checksums.json"
 
 get_deployment_dirs() {
