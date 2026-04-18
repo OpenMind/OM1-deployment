@@ -42,6 +42,44 @@ get_docker_sha256() {
         tag="latest"
     fi
 
+    # Check if this is an AWS ECR image
+    if [[ "$image_repo" == *.dkr.ecr.*.amazonaws.com/* ]]; then
+        echo "Detected AWS ECR image: ${image_repo}:${tag}" >&2
+
+        local region=$(echo "$image_repo" | sed -n 's/.*\.dkr\.ecr\.\([^.]*\)\.amazonaws\.com.*/\1/p')
+
+        if [ -z "$region" ]; then
+            echo "Error: Could not extract AWS region from ${image_repo}" >&2
+            return 1
+        fi
+
+        if ! command -v aws &> /dev/null; then
+            echo "Error: AWS CLI is not installed. Please install it to query ECR images." >&2
+            return 1
+        fi
+
+        local repo_name=$(echo "$image_repo" | sed 's|.*\.amazonaws\.com/||')
+
+        echo "Querying AWS ECR for ${repo_name}:${tag} in region ${region}..." >&2
+
+        local sha256=$(aws ecr describe-images \
+            --region "$region" \
+            --repository-name "$repo_name" \
+            --image-ids imageTag="$tag" \
+            --query 'imageDetails[0].imageDigest' \
+            --output text 2>&1 | sed 's/sha256://')
+
+        if [ $? -ne 0 ] || [ -z "$sha256" ] || [[ "$sha256" == *"error"* ]] || [[ "$sha256" == "None" ]]; then
+            echo "Error: Failed to get SHA256 for ECR image ${repo_name}:${tag}" >&2
+            echo "Make sure you have proper AWS credentials configured and permissions to access ECR" >&2
+            return 1
+        fi
+
+        echo "$sha256"
+        return 0
+    fi
+
+    # Handle public Docker Hub images
     local token=$(curl -s "https://auth.docker.io/token?service=registry.docker.io&scope=repository:${image_repo}:pull" \
         | sed -n 's/.*"token":"\([^"]*\)".*/\1/p')
 
