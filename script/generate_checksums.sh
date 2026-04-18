@@ -42,9 +42,41 @@ get_docker_sha256() {
         tag="latest"
     fi
 
-    # Check if this is an AWS ECR image
+    # Check if this is an AWS Public ECR image
+    if [[ "$image_repo" == public.ecr.aws/* ]]; then
+        echo "Detected AWS Public ECR image: ${image_repo}:${tag}" >&2
+
+        if ! command -v aws &> /dev/null; then
+            echo "Error: AWS CLI is not installed. Please install it to query ECR images." >&2
+            return 1
+        fi
+
+        local repo_name=$(echo "$image_repo" | sed 's|public\.ecr\.aws/[^/]*/||')
+        local registry_alias=$(echo "$image_repo" | sed -n 's|public\.ecr\.aws/\([^/]*\)/.*|\1|p')
+
+        echo "Querying AWS Public ECR for ${repo_name}:${tag}..." >&2
+
+        local sha256=$(aws ecr-public describe-images \
+            --region us-east-1 \
+            --repository-name "$repo_name" \
+            --image-ids imageTag="$tag" \
+            --registry-id $(aws ecr-public describe-registries --region us-east-1 --query 'registries[0].registryId' --output text) \
+            --query 'imageDetails[0].imageDigest' \
+            --output text 2>&1 | sed 's/sha256://')
+
+        if [ $? -ne 0 ] || [ -z "$sha256" ] || [[ "$sha256" == *"error"* ]] || [[ "$sha256" == "None" ]]; then
+            echo "Error: Failed to get SHA256 for Public ECR image ${repo_name}:${tag}" >&2
+            echo "Make sure you have proper AWS credentials configured and permissions to access Public ECR" >&2
+            return 1
+        fi
+
+        echo "$sha256"
+        return 0
+    fi
+
+    # Check if this is an AWS Private ECR image
     if [[ "$image_repo" == *.dkr.ecr.*.amazonaws.com/* ]]; then
-        echo "Detected AWS ECR image: ${image_repo}:${tag}" >&2
+        echo "Detected AWS Private ECR image: ${image_repo}:${tag}" >&2
 
         local region=$(echo "$image_repo" | sed -n 's/.*\.dkr\.ecr\.\([^.]*\)\.amazonaws\.com.*/\1/p')
 
@@ -60,7 +92,7 @@ get_docker_sha256() {
 
         local repo_name=$(echo "$image_repo" | sed 's|.*\.amazonaws\.com/||')
 
-        echo "Querying AWS ECR for ${repo_name}:${tag} in region ${region}..." >&2
+        echo "Querying AWS Private ECR for ${repo_name}:${tag} in region ${region}..." >&2
 
         local sha256=$(aws ecr describe-images \
             --region "$region" \
@@ -70,7 +102,7 @@ get_docker_sha256() {
             --output text 2>&1 | sed 's/sha256://')
 
         if [ $? -ne 0 ] || [ -z "$sha256" ] || [[ "$sha256" == *"error"* ]] || [[ "$sha256" == "None" ]]; then
-            echo "Error: Failed to get SHA256 for ECR image ${repo_name}:${tag}" >&2
+            echo "Error: Failed to get SHA256 for Private ECR image ${repo_name}:${tag}" >&2
             echo "Make sure you have proper AWS credentials configured and permissions to access ECR" >&2
             return 1
         fi
