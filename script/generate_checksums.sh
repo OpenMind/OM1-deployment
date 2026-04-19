@@ -74,7 +74,8 @@ get_docker_sha256() {
     # Handle AWS ECR Private (*.dkr.ecr.*.amazonaws.com/...)
     if [[ "$image_repo" == *.dkr.ecr.*.amazonaws.com/* ]]; then
         local region=$(echo "$image_repo" | sed 's/.*\.dkr\.ecr\.\([^.]*\)\.amazonaws\.com.*/\1/')
-        local ecr_path="${image_repo#*.amazonaws.com/}"
+        local registry=$(echo "$image_repo" | cut -d'/' -f1)
+        local ecr_path=$(echo "$image_repo" | cut -d'/' -f2-)
 
         local token=$(aws ecr get-login-password --region "$region" 2>/dev/null)
 
@@ -83,10 +84,10 @@ get_docker_sha256() {
             return 1
         fi
 
-        local registry="${image_repo%%/*}"
+        local auth=$(echo -n "AWS:${token}" | base64 | tr -d '\n')
 
-        local sha256=$(curl -s -I \
-            -H "Authorization: Basic $(echo -n "AWS:${token}" | base64)" \
+        local sha256=$(curl -sL -I \
+            -H "Authorization: Basic $auth" \
             -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
             "https://${registry}/v2/${ecr_path}/manifests/${tag}" \
             | grep -i "docker-content-digest" \
