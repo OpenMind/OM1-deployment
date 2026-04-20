@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   functiongemma:
-    image: public.ecr.aws/b8k9c8n5/openmind/functiongemma_service:latest
+    image: public.ecr.aws/b8k9c8n5/openmind/functiongemma_service:v1.0.1
     container_name: functiongemma
 
     network_mode: host
