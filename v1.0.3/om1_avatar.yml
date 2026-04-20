@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: public.ecr.aws/b8k9c8n5/openmind/om1_avatar:latest
+    image: public.ecr.aws/b8k9c8n5/openmind/om1_avatar:v1.0.3
     container_name: om1_avatar
     environment:
       - VITE_OM_API_KEY=${OM_API_KEY}
