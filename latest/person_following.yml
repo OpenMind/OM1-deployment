@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: openmindagi/person_following:latest
+    image: 453064692066.dkr.ecr.us-east-1.amazonaws.com/openmind/person_following:latest
     container_name: person_following
     runtime: nvidia
     network_mode: host
