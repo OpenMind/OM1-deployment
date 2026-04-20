@@ -4,7 +4,7 @@ services:
   om1_sensor:
     build:
       context: .
-    image: openmindagi/om1_ros2_sdk:latest
+    image: 453064692066.dkr.ecr.us-east-1.amazonaws.com/openmind/om1_ros2_sdk:latest
     container_name: om1_sensor
     network_mode: host
     devices:
