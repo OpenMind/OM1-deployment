@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   kokoro_tts:
-    image: openmindagi/kokoro-fastapi:latest
+    image: public.ecr.aws/b8k9c8n5/openmind/kokoro-fastapi:latest
     container_name: kokoro_tts
 
     network_mode: host
