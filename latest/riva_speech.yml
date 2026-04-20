@@ -1,6 +1,6 @@
 services:
   riva_speech:
-    image: openmindagi/riva-speech-server:2.24.0-l4t-aarch64
+    image: public.ecr.aws/b8k9c8n5/openmind/riva-speech-server:2.24.0-l4t-aarch64
     container_name: riva_speech
     restart: unless-stopped
 
