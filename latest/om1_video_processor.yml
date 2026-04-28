@@ -16,7 +16,7 @@ services:
       - /app/.ota/om1_video_processor_latest.env
     environment:
       - ROBOT_TYPE=${ROBOT_TYPE:-go2}
-      - CAMERA_INDEX=${CAMERA_INDEX:-/dev/insta360}
+      - CAMERA_INDEX=${CAMERA_INDEX:-/dev/usbcam}
       - MICROPHONE_INDEX=${MICROPHONE_INDEX:-default_mic_aec}
       - MIC_RNNOISE_MODEL_PATH=${MIC_RNNOISE_MODEL_PATH:-/app/om1_video_processor/models/rnnoise.rnnn}
       - PULSE_SERVER=unix:/run/user/${HOST_USER_ID:-2001}/pulse/native
@@ -26,7 +26,7 @@ services:
       - GALLERY_DIR=/data/gallery
       - EMBEDS_DIR=/data/embeds
     volumes:
-      - /dev/insta360:/dev/insta360
+      - /dev/usbcam:/dev/usbcam
       - /dev/snd:/dev/snd:rw
       - /run/user/${HOST_USER_ID:-2001}/pulse:/run/user/${HOST_USER_ID:-2001}/pulse:rw
       - /home/openmind/.config/pulse/cookie:/root/.config/pulse/cookie:ro
