@@ -1,6 +1,6 @@
 {
     "om1": {
-        "image": "public.ecr.aws/b8k9c8n5/openmind/om1:latest",
+        "image": "openmindagi/om1:v1.0.2-beta.1",
         "env": {
             "OM1_COMMAND": "unitree_go2_modes"
         }

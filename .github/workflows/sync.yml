@@ -30,6 +30,10 @@ jobs:
             echo "BUCKET=${{ secrets.BUCKET }}" >> $GITHUB_ENV
             echo "CLOUDFRONT_DISTRIBUTION_ID=${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" >> $GITHUB_ENV
 
+      - name: Login to ECR Public
+        run: |
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
+
       - name: Generate checksums
         run: bash ./script/generate_checksums.sh
 

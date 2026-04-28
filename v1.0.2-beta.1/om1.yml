@@ -5,12 +5,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: public.ecr.aws/b8k9c8n5/openmind/om1:latest
+    image: openmindagi/om1:v1.0.2-beta.1
     container_name: om1
     restart: unless-stopped
     network_mode: host
     env_file:
-      - /app/.ota/om1_latest.env
+      - /app/.ota/om1_v1.0.2-beta.1.env
     environment:
       - ROS_DOMAIN_ID=0
       - CYCLONEDDS_HOME=/app/cyclonedds/install

@@ -42,6 +42,68 @@ get_docker_sha256() {
         tag="latest"
     fi
 
+    # Handle AWS ECR Public (public.ecr.aws/...)
+    if [[ "$image_repo" == public.ecr.aws/* ]]; then
+        local ecr_path="${image_repo#public.ecr.aws/}"
+
+        local token=$(curl -sL "https://public.ecr.aws/token/?service=public.ecr.aws&scope=repository:${ecr_path}:pull" \
+            | jq -r '.token // .access_token // empty')
+
+        if [ -z "$token" ]; then
+            echo "Error: Failed to get ECR Public token for ${image_repo}" >&2
+            return 1
+        fi
+
+        local sha256=$(curl -sL -I \
+            -H "Authorization: Bearer $token" \
+            -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
+            "https://public.ecr.aws/v2/${ecr_path}/manifests/${tag}" \
+            | grep -i "docker-content-digest" \
+            | sed 's/.*sha256:\([a-f0-9]*\).*/\1/' \
+            | tr -d '\r')
+
+        if [ -z "$sha256" ]; then
+            echo "Error: Failed to get SHA256 for ${image_repo}:${tag}" >&2
+            return 1
+        fi
+
+        echo "$sha256"
+        return 0
+    fi
+
+    # Handle AWS ECR Private (*.dkr.ecr.*.amazonaws.com/...)
+    if [[ "$image_repo" == *.dkr.ecr.*.amazonaws.com/* ]]; then
+        local region=$(echo "$image_repo" | sed 's/.*\.dkr\.ecr\.\([^.]*\)\.amazonaws\.com.*/\1/')
+        local registry=$(echo "$image_repo" | cut -d'/' -f1)
+        local ecr_path=$(echo "$image_repo" | cut -d'/' -f2-)
+
+        local token=$(aws ecr get-login-password --region "$region" 2>/dev/null)
+
+        if [ -z "$token" ]; then
+            echo "Error: Failed to get ECR Private token for ${image_repo} (is AWS CLI configured?)" >&2
+            return 1
+        fi
+
+        local auth=$(echo -n "AWS:${token}" | base64 | tr -d '\n')
+
+        local sha256=$(curl -sL -I \
+            -H "Authorization: Basic $auth" \
+            -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
+            "https://${registry}/v2/${ecr_path}/manifests/${tag}" \
+            | grep -i "docker-content-digest" \
+            | sed 's/.*sha256:\([a-f0-9]*\).*/\1/' \
+            | tr -d '\r')
+
+        if [ -z "$sha256" ]; then
+            echo "Error: Failed to get SHA256 for ${image_repo}:${tag}" >&2
+            return 1
+        fi
+
+        echo "$sha256"
+        return 0
+    fi
+
+    # Default: Docker Hub
     local token=$(curl -s "https://auth.docker.io/token?service=registry.docker.io&scope=repository:${image_repo}:pull" \
         | sed -n 's/.*"token":"\([^"]*\)".*/\1/p')
 

@@ -5,7 +5,7 @@ services:
     build:
       context: ..
       dockerfile: ./OTA/Dockerfile
-    image: openmindagi/ota:latest
+    image: public.ecr.aws/b8k9c8n5/openmind/ota:latest
     container_name: ota_updater
     restart: unless-stopped
     environment:
