@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: openmindagi/om1:v1.0.2-beta.2
+    image: public.ecr.aws/b8k9c8n5/openmind/om1:v1.0.2-beta.2
     container_name: om1
     restart: unless-stopped
     network_mode: host
